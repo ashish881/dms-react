@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useEffect, useState } from "react";
+import LoginScreen from "./screen/LoginScreen";
+import HomeScreen from "./screen/HomeScreen";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Header from "./component/Header";
 
 function App() {
+  const [isClick, setClick] = useState(false);
+  const [menuListIndex, setMenuListIndex] = useState(null);
+
+  const frmLocal = localStorage.getItem("userInfo");
+  const _frmLocal = JSON.parse(frmLocal);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        {!!_frmLocal && isClick && (
+          <Header
+            // isClick={isClick}
+            title={"Domain Management System"}
+            setMenuListIndex={setMenuListIndex}
+          ></Header>
+        )}
+        <Route
+          path="/login"
+          component={(props) => <LoginScreen setClick={setClick} {...props} />}
+        ></Route>
+        <Route
+          path="/"
+          component={(props) => (
+            <HomeScreen
+              isClick={isClick}
+              setClick={setClick}
+              menuListIndex={menuListIndex}
+              {...props}
+            />
+          )}
+          exact
+        ></Route>
+      </Router>
     </div>
   );
 }
